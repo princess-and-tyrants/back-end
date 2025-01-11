@@ -3,11 +3,12 @@ from datetime import datetime
 from sqlalchemy import text
 import logging
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
-
+from sqlalchemy.future import select  
+from app.schemas.vote import Vote
 
 # 모듈 추가
 from app.routers.test_router import router as test_router
+from app.routers.vote import router as vote_router
 from app.utils.jwt_token_generator import router as jwt_token_generator
 from jwt_middleware import JWTMiddleware, BlockUndefinedRoutesMiddleware
 from database_connect import get_db
@@ -18,6 +19,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 # 라우터 추가
 app.include_router(test_router)
+app.include_router(vote_router)
 app.include_router(jwt_token_generator)
 
 # 허용된 경로 및 접두사 설정
@@ -49,9 +51,10 @@ async def log_requests(request: Request, call_next):
 
 @app.get("/users/") #테스트용 모든 users데이터 전부 조회
 async def read_users(db: AsyncSession = Depends(get_db)):
-    result = await db.execute(text("SELECT * FROM users"))  # 모든 데이터를 조회
+    result = await db.execute(text("SELECT * FROM user"))  # 모든 데이터를 조회
     users = [dict(row._mapping) for row in result.fetchall()]  # 딕셔너리로 변환
     return users
+
 
 #pip install fastapi uvicorn aioredis pymysql sqlalchemy databases PYJWT python-dotenv pydantic-settings starlette aiomysql
 #uvicorn main:app --reload

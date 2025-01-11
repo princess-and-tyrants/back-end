@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
-DATABASE_URL = "mysql+aiomysql://root:0000@localhost:3306/bbibbiyakton"
+DATABASE_URL = "mysql+aiomysql://root:0000@127.0.0.1:3306/mbtid"
 
 # SQLAlchemy 비동기 엔진 생성
 engine = create_async_engine(DATABASE_URL, echo=True)
