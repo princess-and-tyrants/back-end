@@ -2,8 +2,7 @@ import jwt
 import datetime
 import secrets
 import base64
-from fastapi import APIRouter, HTTPException, Depends, Request
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter
 
 router = APIRouter()
 
@@ -16,7 +15,6 @@ def generate_secret_key():
 
 secret_key = "gTA8B7V5W24-7jcn1IFoY0FHsBqgQ_Z6TWYD-J4Cyb4="
 
-@router.get("/generate_jwt_token")
 def generate_jwt_token(user_id):
     payload = {
         "user_id": user_id,
