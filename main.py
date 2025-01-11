@@ -12,6 +12,7 @@ from app.utils.jwt_token_generator import router as jwt_token_generator
 from jwt_middleware import JWTMiddleware, BlockUndefinedRoutesMiddleware
 from database_connect import get_db
 from app.utils.aes_logic import router as aes_logic
+from app.routers.auth_router import router as auth_router
 
 
 app = FastAPI(title="Hackathon Project", version="1.0")
@@ -24,11 +25,14 @@ logging.basicConfig(level=logging.DEBUG)
 app.include_router(test_router)
 app.include_router(jwt_token_generator)
 app.include_router(aes_logic)
+app.include_router(auth_router)
 
 
 # 허용된 경로 및 접두사 설정
 allowed_routes = []
-excluded_prefixes = ["/", "/users" ,"/public", "/static", "/docs", "/redoc", "/openapi.json", "/generate_secret_key", "/generate_key", "/generate_key_base64"]
+excluded_prefixes = ["/", "/signup", "/signin", "/check/nickname"
+                      "/users" ,"/public", "/static", "/docs", "/redoc", "/openapi.json",
+                      "/generate_secret_key", "/generate_key", "/generate_key_base64"]
 
 
 # 미들웨어 추가
