@@ -1,8 +1,10 @@
 from pydantic import BaseModel
 
-class UpdateUserReq(BaseModel):
-    nickname: str | None
-    mbti_ei_score : int | None
-    mbti_sn_score : int | None
-    mbti_tf_score : int | None
-    mbti_pj_score : int | None
+class UpdateUserNicknameReq(BaseModel):
+    nickname: str
+    
+class UpdateUserMbtiReq(BaseModel):
+    mbti_ei_score : int
+    mbti_sn_score : int
+    mbti_tf_score : int
+    mbti_pj_score : int

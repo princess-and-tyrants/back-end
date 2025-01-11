@@ -10,15 +10,15 @@ from app.models.auth_dto import SignupReq, SigninReq
 from app.utils.aes_logic import key, iv, aes_decrypt
 import bcrypt
 from app.utils.jwt_token_generator import generate_jwt_token
-from app.models.user_dto import UpdateUserReq
-import datetime
+from app.models.user_dto import UpdateUserNicknameReq, UpdateUserMbtiReq
+from datetime import datetime
 
 
 class UserService:
     def __init__(self, db: AsyncSession):
         self.db = db
 
-    async def update_user_profile(self, user_id : str, update_user_req: UpdateUserReq) :
+    async def update_nickname(self, user_id : str, update_user_req: UpdateUserNicknameReq) :
         async with self.db.begin() as transaction:  # 트랜잭션 시작
             try:
                 # 기존 사용자 검색
@@ -34,17 +34,53 @@ class UserService:
                     update(User)
                     .where(User.user_id == user_id)
                     .values(
-                        mbti_ei_score=update_user_req.mbti_ei_score,
-                        mbti_sn_score=update_user_req.mbti_sn_score,
-                        mbti_tf_score=update_user_req.mbti_tf_score,
-                        mbti_pj_score=update_user_req.mbti_pj_score,
                         nickname=update_user_req.nickname,
-                        modified_date=datetime.utcnow()  # 수정 날짜 갱신
+                        modified_date=datetime.now()  # 수정 날짜 갱신
                     )
                 )
 
                 # 업데이트 실행
                 await self.db.execute(update_query)
+
+                return {"message" : "update is successful"}
+
+            except HTTPException:
+                # 특정 예외는 바로 전달
+                raise
+            except SQLAlchemyError as e:
+                # SQLAlchemy 관련 에러 발생 시 롤백
+                await transaction.rollback()
+                raise HTTPException(status_code=404, detail="Database error occurred") from e
+    
+        
+    async def update_mbti(self, user_id : str, update_user_mbti: UpdateUserMbtiReq) :
+        async with self.db.begin() as transaction:  # 트랜잭션 시작
+            try:
+                # 기존 사용자 검색
+                query = select(User).where(and_(User.user_id == user_id, User.is_deleted == "N"))
+                result = await self.db.execute(query)
+                user = result.scalar_one_or_none()
+
+                if not user:
+                    raise HTTPException(status_code=450, detail="Resource not found")  # 450 : 해당 데이터 없음
+
+                # 업데이트 쿼리 작성
+                update_query = (
+                    update(User)
+                    .where(User.user_id == user_id)
+                    .values(
+                        mbti_ei_score = update_user_mbti.mbti_ei_score,
+                        mbti_sn_score = update_user_mbti.mbti_sn_score,
+                        mbti_tf_score = update_user_mbti.mbti_tf_score,
+                        mbti_pj_score = update_user_mbti.mbti_pj_score,
+                        modified_date=datetime.now()  # 수정 날짜 갱신
+                    )
+                )
+
+                # 업데이트 실행
+                await self.db.execute(update_query)
+
+                return {"message" : "update is successful"}
 
             except HTTPException:
                 # 특정 예외는 바로 전달

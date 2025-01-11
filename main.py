@@ -15,6 +15,7 @@ from database_connect import get_db
 from app.utils.aes_logic import router as aes_logic
 from app.routers.auth_router import router as auth_router
 from app.routers.home_router import router as home_router
+from app.routers.update_router import router as update_router
 
 
 app = FastAPI(title="Hackathon Project", version="1.0")
@@ -28,6 +29,7 @@ app.include_router(jwt_token_generator)
 app.include_router(aes_logic)
 app.include_router(auth_router)
 app.include_router(home_router)
+app.include_router(update_router)
 
 app.add_middleware(
     CORSMiddleware,
@@ -39,8 +41,8 @@ app.add_middleware(
 
 
 # 허용된 경로 및 접두사 설정
-allowed_routes = ["/home/profile"]
-excluded_prefixes = ["/signup", "/signin", "/check/nickname", "/profile/update_nickname",
+allowed_routes = ["/home/profile", "/user/update_nickname", "/user/update_mbti"]
+excluded_prefixes = ["/signup", "/signin", "/check/nickname",
                      "/public", "/static", "/docs", "/redoc", "/openapi.json", "/make_test_password",
                       "/generate_secret_key", "/generate_key", "/generate_key_base64"]
 
