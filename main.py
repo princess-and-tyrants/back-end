@@ -11,7 +11,6 @@ import uvicorn
 from app.routers.test_router import router as test_router
 from app.utils.jwt_token_generator import router as jwt_token_generator
 from jwt_middleware import JWTMiddleware, BlockUndefinedRoutesMiddleware
-from database_connect import get_db
 from app.utils.aes_logic import router as aes_logic
 from app.routers.auth_router import router as auth_router
 from app.routers.home_router import router as home_router
