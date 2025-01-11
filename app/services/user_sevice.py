@@ -16,6 +16,24 @@ class UserService:
     def __init__(self, db: AsyncSession):
         self.db = db
 
+    async def get_home_profile(self, user_id : str):
+        query = select(User).where(and_(User.user_id == user_id, User.is_deleted == "N"))
+        result = await self.db.execute(query)
+        user = result.scalar_one_or_none()
+
+        if not user:
+            raise HTTPException(status_code=450, detail="Resource not found") # 450 : 해당 데이터 
+        
+        mbti_first_element = 'I' if user.mbti_ei_score > 50 else 'E'
+        mbti_second_element = 'N' if user.mbti_sn_score > 50 else 'S'
+        mbti_third_element = 'F' if user.mbti_tf_score > 50 else 'T'
+        mbti_forth_element = 'J' if user.mbti_pj_score > 50 else 'P'
+
+        mbti = mbti_first_element + mbti_second_element + mbti_third_element + mbti_forth_element
+
+        return {"userId" : user.user_id, "nickname" : user.nickname, "mbti" : mbti}
+
+
     async def check_duplicate_id(self, id : str):
         query = select(exists().where(and_(User.id == id, User.is_deleted == "N")))
         result = await self.db.execute(query)

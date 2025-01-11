@@ -2,6 +2,9 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from fastapi import Request
 from fastapi.responses import JSONResponse
 import jwt
+from fastapi.security import APIKeyHeader
+
+api_key_header = APIKeyHeader(name="Authorization", auto_error=False)
 
 # JWT Secret Key
 secret_key = "gTA8B7V5W24-7jcn1IFoY0FHsBqgQ_Z6TWYD-J4Cyb4="

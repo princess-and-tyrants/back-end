@@ -3,6 +3,7 @@ import datetime
 import secrets
 import base64
 from fastapi import APIRouter
+from jwt.exceptions import ExpiredSignatureError, InvalidTokenError
 
 router = APIRouter()
 
