@@ -2,7 +2,8 @@ import jwt
 import datetime
 import secrets
 import base64
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException, Depends, Request
+from fastapi.responses import JSONResponse
 
 router = APIRouter()
 
@@ -15,12 +16,11 @@ def generate_secret_key():
 
 secret_key = "gTA8B7V5W24-7jcn1IFoY0FHsBqgQ_Z6TWYD-J4Cyb4="
 
-payload = {
-    "user_id": "test@example.com",
-    "exp": datetime.datetime.now() + datetime.timedelta(hours=1)
-}
-
-def generate_jwt_token():
+@router.get("/generate_jwt_token")
+def generate_jwt_token(user_id):
+    payload = {
+        "user_id": user_id,
+        "exp": datetime.datetime.now() + datetime.timedelta(hours=24)
+    }
     token = jwt.encode(payload, secret_key, algorithm="HS256")
     print("Generated Token:", token)
-
