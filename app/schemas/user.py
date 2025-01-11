@@ -7,7 +7,7 @@ class User(Base):
     __tablename__ = "user"
 
     # Columns
-    user_id = Column(String(50), primary_key=True, index=True, comment="UUID")
+    user_id = Column(String(50), primary_key=True, comment="UUID")
     id = Column(String(50), unique=True, nullable=False, comment="사용자 ID, 고유 값")
     mbti_ei_score = Column(Integer, nullable=False, comment="MBTI 1번째 (E,I) [0(100)~100(0)]")
     mbti_sn_score = Column(Integer, nullable=False, comment="MBTI 2번째 (S,N) [0(100)~100(0)]")

@@ -40,7 +40,7 @@ app.add_middleware(
 
 # 허용된 경로 및 접두사 설정
 allowed_routes = ["/home/profile"]
-excluded_prefixes = ["/signup", "/signin", "/check/nickname",
+excluded_prefixes = ["/signup", "/signin", "/check/nickname", "/profile/update_nickname",
                      "/public", "/static", "/docs", "/redoc", "/openapi.json", "/make_test_password",
                       "/generate_secret_key", "/generate_key", "/generate_key_base64"]
 
