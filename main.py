@@ -31,7 +31,7 @@ app.include_router(auth_router)
 # 허용된 경로 및 접두사 설정
 allowed_routes = []
 excluded_prefixes = ["/", "/signup", "/signin", "/check/nickname"
-                      "/users" ,"/public", "/static", "/docs", "/redoc", "/openapi.json",
+                      "/users" ,"/public", "/static", "/docs", "/redoc", "/openapi.json", "/make_test_password",
                       "/generate_secret_key", "/generate_key", "/generate_key_base64"]
 
 
@@ -46,7 +46,7 @@ app.add_middleware(
 )
 
 
-@app.get("/")
+@app.get("/", summary="디폴트페이지", description="그냥 테스트용 api", tags=["test"])
 def read_root():
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     return {"current_time": current_time}
@@ -60,7 +60,7 @@ async def log_requests(request: Request, call_next):
     return response
 
 
-@app.get("/users/") #테스트용 모든 users데이터 전부 조회
+@app.get("/users/", summary="단순 테스트 api", description="그냥 테스트용 api", tags=["test"]) #테스트용 모든 users데이터 전부 조회
 async def read_users(db: AsyncSession = Depends(get_db)):
     result = await db.execute(text("SELECT * FROM user"))  # 모든 데이터를 조회
     users = [dict(row._mapping) for row in result.fetchall()]  # 딕셔너리로 변환

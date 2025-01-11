@@ -21,4 +21,4 @@ def generate_jwt_token(user_id):
         "exp": datetime.datetime.now() + datetime.timedelta(hours=24)
     }
     token = jwt.encode(payload, secret_key, algorithm="HS256")
-    print("Generated Token:", token)
+    return token
