@@ -30,4 +30,3 @@ async def get_vote(vote_id: str, db: AsyncSession = Depends(get_db)):
     if not result:
         raise HTTPException(status_code=450, detail="Vote not found")
     return result
-
