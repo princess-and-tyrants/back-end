@@ -12,7 +12,7 @@ async def signup(signup_req: SignupReq, db: AsyncSession = Depends(get_db)):
     result = await user_service.signup(signup_req)
     return result
     
-@router.post("/check/nickname", summary="닉네임 중복검사 api", description="예외처리시 404", tags=["Auth"])
+@router.post("/check/id", summary="닉네임 중복검사 api", description="예외처리시 404", tags=["Auth"])
 async def check_duplicate_id(id : str, db: AsyncSession = Depends(get_db)) :
     user_service = UserService(db)
     result = await user_service.check_duplicate_id(id)

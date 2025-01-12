@@ -106,7 +106,8 @@ class UserService:
 
         mbti = mbti_first_element + mbti_second_element + mbti_third_element + mbti_forth_element
 
-        return {"userId" : user.user_id, "nickname" : user.nickname, "mbti" : mbti}
+        return {"userId" : user.user_id, "nickname" : user.nickname, "mbti" : mbti, "user.mbti_ei_score" : user.mbti_ei_score,
+                "user.mbti_sn_score" : user.mbti_sn_score, "user.mbti_tf_score" : user.mbti_tf_score, "user.mbti_pj_score" : user.mbti_pj_score}
 
 
     async def check_duplicate_id(self, id : str):
