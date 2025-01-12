@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.schemas.user import User
 from app.schemas.vote import Vote
-from app.services.vote_service import get_vote_by_id,create_vote
+from app.services.vote_service import get_vote_by_id,create_vote, get_detailed_vote_statistics
 from database_connect import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.vote import VoteReq
@@ -30,3 +30,10 @@ async def get_vote(vote_id: str, db: AsyncSession = Depends(get_db)):
     if not result:
         raise HTTPException(status_code=450, detail="Vote not found")
     return result
+
+@router.get("/votes/statistics/{user_id}")
+async def vote_statistics(user_id: str, db: AsyncSession = Depends(get_db)):
+    stats = await get_detailed_vote_statistics(db, user_id)
+    if stats["total_votes"] == 0:
+        raise HTTPException(status_code=404, detail="No votes found for the given user")
+    return stats

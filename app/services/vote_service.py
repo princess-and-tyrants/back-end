@@ -7,6 +7,7 @@ from app.models.vote import VoteReq
 from app.schemas.user import User
 from app.schemas.vote import Vote
 from app.schemas.vote_link import VoteLink
+from sqlalchemy import func
 
 # 로깅 설정
 logging.basicConfig(level=logging.INFO)
@@ -93,3 +94,55 @@ async def get_vote_by_id(db: AsyncSession, vote_id: str):
 
     logger.info(f"Vote found: {vote}")
     return vote
+
+async def get_detailed_vote_statistics(db: AsyncSession, user_id: str):
+    voting_user_id = await find_user_id(db,user_id)
+    if not voting_user_id :
+        raise HTTPException(status_code=450, detail="User not found")
+    # 총 투표 개수 구하기
+    total_votes_query = select(func.count()).where(
+        Vote.voting_user_id == voting_user_id,
+        Vote.is_deleted == "N"
+    )
+    total_votes_result = await db.execute(total_votes_query)
+    total_votes = total_votes_result.scalar()
+
+    if total_votes == 0:
+        return {
+            "total_votes": 0,
+            "mbti_statistics": {
+                "first_mbti_element": {},
+                "second_mbti_element": {},
+                "third_mbti_element": {},
+                "forth_mbti_element": {}
+            }
+        }
+
+    # MBTI 통계 구하는 공통 함수
+    async def get_mbti_element_stats(element_column):
+        query = select(
+            element_column,
+            func.count().label("count")
+        ).where(
+            Vote.voting_user_id == voting_user_id,
+            Vote.is_deleted == "N"
+        ).group_by(element_column)
+
+        result = await db.execute(query)
+        return {row[0]: (row[1] / total_votes) * 100 for row in result}
+
+    # 각 MBTI 요소별 통계 구하기
+    first_stats = await get_mbti_element_stats(Vote.first_mbti_element)
+    second_stats = await get_mbti_element_stats(Vote.second_mbti_element)
+    third_stats = await get_mbti_element_stats(Vote.third_mbti_element)
+    forth_stats = await get_mbti_element_stats(Vote.forth_mbti_element)
+
+    return {
+        "total_votes": total_votes,
+        "mbti_statistics": {
+            "first_mbti_element": first_stats,
+            "second_mbti_element": second_stats,
+            "third_mbti_element": third_stats,
+            "forth_mbti_element": forth_stats
+        }
+    }
