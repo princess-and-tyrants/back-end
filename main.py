@@ -3,12 +3,15 @@ from datetime import datetime
 from sqlalchemy import text
 import logging
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
+from sqlalchemy.future import select  
+from app.schemas.vote import Vote
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
+
 # 모듈 추가
 from app.routers.test_router import router as test_router
+from app.routers.vote import router as vote_router
 from app.utils.jwt_token_generator import router as jwt_token_generator
 from jwt_middleware import JWTMiddleware, BlockUndefinedRoutesMiddleware
 from app.utils.aes_logic import router as aes_logic
@@ -25,6 +28,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 # 라우터 추가
 app.include_router(test_router)
+app.include_router(vote_router)
 app.include_router(jwt_token_generator)
 app.include_router(aes_logic)
 app.include_router(auth_router)
@@ -66,6 +70,12 @@ async def log_requests(request: Request, call_next):
     logging.debug(f"Response Status: {response.status_code}")
     return response
 
+
+@app.get("/users/") #테스트용 모든 users데이터 전부 조회
+async def read_users(db: AsyncSession = Depends(get_db)):
+    result = await db.execute(text("SELECT * FROM user"))  # 모든 데이터를 조회
+    users = [dict(row._mapping) for row in result.fetchall()]  # 딕셔너리로 변환
+    return users
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=80, reload=True)

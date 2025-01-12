@@ -2,7 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-DATABASE_URL = "mysql+aiomysql://root:0000@localhost:3306/bbibbiyakton"
+DATABASE_URL = "mysql+aiomysql://root:0000@127.0.0.1:3306/mbtid"
 
 Base = declarative_base()
 
