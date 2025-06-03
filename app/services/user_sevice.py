@@ -116,18 +116,24 @@ class UserService:
         is_duplicate = result.scalar()
 
         if is_duplicate:
-            raise HTTPException(status_code=404, detail="Id is duplicated")
+            raise HTTPException(status_code=400, detail="ID가 중복되었습니다.") # 400 : id가 중복된 경우
         
-        return {"message": "Id is valid"}
+        return {"message": "사용가능한 ID입니다."} # 200 : id가 중복되지 않은 경우
     
 
     async def signup(self, signup_req: SignupReq):
         try:
             print(signup_req)
-            decrypted_password = aes_decrypt(signup_req.password, key, iv)
-            password_bytes = decrypted_password.encode('utf-8')
-            hashed_password = bcrypt.hashpw(password_bytes, bcrypt.gensalt())
-            print(hashed_password)
+            # NOTE : password 해시는 제거하기, HTTPS를 붙이면 됨
+            # NOTE : 이전 코드
+            # decrypted_password = aes_decrypt(signup_req.password, key, iv)
+            # password_bytes = decrypted_password.encode('utf-8')
+            # hashed_password = bcrypt.hashpw(password_bytes, bcrypt.gensalt())
+            # NOTE : 이전 코드
+
+            password_bytes = signup_req.password.encode('utf-8')
+            hashed_password = bcrypt.hashpw(password_bytes, bcrypt.gensalt()).decode('utf-8')
+
             # UUID 자동 생성
             new_user = User(
                 user_id=str(uuid.uuid4()),  # UUID 생성
@@ -147,24 +153,25 @@ class UserService:
 
         except Exception as e:
             await self.db.rollback()  # 에러 발생 시 롤백
-            raise HTTPException(status_code=404, detail="signup is failed")
+            raise HTTPException(status_code=400, detail="회원가입에 실패하였습니다.")
 
         finally:
-            await self.db.close()  # 세션 닫기
-
+            await self.db.close()
 
     async def signin(self, signin_req: SigninReq):
-        decrypted_password = aes_decrypt(signin_req.password, key, iv)
+        # NOTE : password 해시는 제거하기, HTTPS를 붙이면 됨
+        # NOTE : 이전 코드
+        # decrypted_password = aes_decrypt(signin_req.password, key, iv)
         query = select(User).where(and_(User.id == signin_req.id, User.is_deleted == "N"))
         result = await self.db.execute(query)
         user = result.scalar_one_or_none()
 
         if not user:
-            raise HTTPException(status_code=451, detail="Id not found") # 451 : id가 유효하지 않은 경우
+            raise HTTPException(status_code=451, detail="아이디가 유효하지 않습니다.") # 451 : id가 유효하지 않은 경우
             
         # 비밀번호 검증
-        if not bcrypt.checkpw(decrypted_password.encode('utf-8'), user.password.encode('utf-8')):
-            raise HTTPException(status_code=452, detail="Password is invalid") # 452 : pw가 유효하지 않은 경우
+        if not bcrypt.checkpw(signin_req.password.encode('utf-8'), user.password.encode('utf-8')):
+            raise HTTPException(status_code=452, detail="비밀번호가 유효하지 않습니다.") # 452 : pw가 유효하지 않은 경우
 
         await self.db.close()  # 세션 닫기
         return {"accessToken" : generate_jwt_token(user.user_id)}

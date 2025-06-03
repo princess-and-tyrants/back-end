@@ -10,8 +10,9 @@ import uvicorn
 
 
 # 모듈 추가
+from database_connect import get_db
 from app.routers.test_router import router as test_router
-from app.routers.vote import router as vote_router
+from app.routers.vote_router import router as vote_router
 from app.utils.jwt_token_generator import router as jwt_token_generator
 from jwt_middleware import JWTMiddleware, BlockUndefinedRoutesMiddleware
 from app.utils.aes_logic import router as aes_logic
@@ -46,7 +47,7 @@ app.add_middleware(
 
 
 # 허용된 경로 및 접두사 설정
-allowed_routes = ["/home/profile", "/user/update_nickname", "/user/update_mbti", "/cardcase", "/cardcase/*"]
+allowed_routes = ["/home", "/user", "/cardcase", "/vote"]
 excluded_prefixes = ["/signup", "/signin", "/check/id",
                      "/public", "/static", "/docs", "/redoc", "/openapi.json", "/make_test_password",
                       "/generate_secret_key", "/generate_key", "/generate_key_base64"]
@@ -71,18 +72,18 @@ async def log_requests(request: Request, call_next):
     return response
 
 
-@app.get("/users/") #테스트용 모든 users데이터 전부 조회
-async def read_users(db: AsyncSession = Depends(get_db)):
-    result = await db.execute(text("SELECT * FROM user"))  # 모든 데이터를 조회
-    users = [dict(row._mapping) for row in result.fetchall()]  # 딕셔너리로 변환
-    return users
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=80, reload=True)
 
 
-#pip install fastapi uvicorn aioredis pymysql sqlalchemy databases PYJWT python-dotenv pydantic-settings starlette aiomysql Crypto bcrypt
-#uvicorn main:app --reload
+# pip install -r requirements.txt
+
+# uvicorn main:app --reload
+# uvicorn main:app --host 0.0.0.0 --port 443 --ssl-keyfile=key.pem --ssl-certfile=cert.pem
+
 #pip install --upgrade fastapi
 #uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 #uvicorn main:app --host 0.0.0.0 --port 80 --reload
+
+# Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNTUwZTg0MDAtZTI5Yi00MWQ0LWE3MTYtNDQ2NjU1NDQwMDA1IiwiZXhwIjoxNzUxNTg5NjY1fQ.flhL-kgSEwp08ADWIVdsBsGzrk4Hg-UoYuiZ2pXw1kI

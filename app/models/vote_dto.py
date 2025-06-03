@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 
 class VoteReq(BaseModel):
+  target_user_id: str
   first_mbti_element: str
   second_mbti_element: str
   third_mbti_element: str

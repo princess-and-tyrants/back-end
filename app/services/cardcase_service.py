@@ -32,13 +32,12 @@ class CardcaseService:
             await self.db.delete(cardcase)
             await self.db.commit()
 
-            return {"message": "cardcase deleted successfully"}
+            return {"message": "성공적으로 보관함에서 삭제하였습니다."}
 
         except Exception as e:
             # 예외 발생 시 롤백
             await self.db.rollback()
-            print(f"Error occurred during deletion: {e}")
-            raise HTTPException(status_code=500, detail="Failed to delete cardcase due to a server error.")
+            raise HTTPException(status_code=400, detail="보관함 삭제 중에 오류가 발생했습니다. 다시 시도해주세요.")
 
     async def create_cardcase(self, this_owner_user_id: str, this_collected_user_id: str):
         try:
@@ -66,10 +65,8 @@ class CardcaseService:
             }
         
         except Exception as e:
-            # 예외 발생 시 롤백 및 디버깅 로그 출력
             await self.db.rollback()
-            print(f"Error occurred during transaction: {e}")
-            raise HTTPException(status_code=500, detail="Failed to create cardcase due to a server error.")
+            raise HTTPException(status_code=400, detail="보관함 추가 중에 오류가 발생했습니다. 다시 시도해주세요.")
             
     
     async def get_cardcase_list(self, user_id : str):
@@ -78,7 +75,7 @@ class CardcaseService:
         user = result.scalar_one_or_none()
 
         if not user:
-            raise HTTPException(status_code=450, detail="Resource not found") # 450 : 해당 데이터
+            raise HTTPException(status_code=450, detail="유저 정보를 찾을 수 없습니다.") # 450 : 해당 데이터
         
         new_query1 = select(CardCase).where(and_(CardCase.owner_user_id == user_id, CardCase.is_deleted == "N"))
         result = await self.db.execute(new_query1)
@@ -109,6 +106,6 @@ class CardcaseService:
                 temp_dict["mbti_pj_score"] = ur.mbti_pj_score
                 cardcase_data.append(temp_dict)
 
-            return {"message" : "It is okay", "data" : cardcase_data}
+            return {"message" : "성공", "data" : cardcase_data}
         
-        return {"message" : "no data in cardcase"}
+        return {"message" : "방명록 데이터가 없습니다.", "data" : []}

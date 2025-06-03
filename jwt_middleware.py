@@ -74,9 +74,18 @@ class BlockUndefinedRoutesMiddleware(BaseHTTPMiddleware):
                 return await call_next(request)
 
         # 허용된 경로 확인
-        if request.url.path not in self.allowed_routes:
+        allowed = False
+        for route in self.allowed_routes:
+            if request.url.path == route or request.url.path.startswith(route + "/"):
+                allowed = True
+                break
+        if not allowed:
             print(f"[BlockUndefinedRoutesMiddleware] Path '{request.url.path}' not allowed.")
             return JSONResponse(status_code=404, content={"detail": f"Route not found: {request.url.path}"})
+        
+        # if request.url.path not in self.allowed_routes:
+        #     print(f"[BlockUndefinedRoutesMiddleware] Path '{request.url.path}' not allowed.")
+        #     return JSONResponse(status_code=404, content={"detail": f"Route not found: {request.url.path}"})
 
         # 다음 미들웨어로 이동
         response = await call_next(request)
