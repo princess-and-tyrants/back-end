@@ -39,7 +39,10 @@ jobs:
           script: |
             cd /home/ubuntu/mbtid
 
-            sudo docker compose down --rmi local --volumes --remove-orphans
+            sudo docker compose stop backend nginx
+            sudo docker compose rm -f backend nginx
 
-            sudo docker compose pull
-            sudo docker compose up -d
+            sudo docker image prune -f
+
+            sudo docker compose build backend
+            sudo docker compose up -d backend nginx
