@@ -86,4 +86,4 @@ if __name__ == "__main__":
 #uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 #uvicorn main:app --host 0.0.0.0 --port 80 --reload
 
-# Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNTUwZTg0MDAtZTI5Yi00MWQ0LWE3MTYtNDQ2NjU1NDQwMDA1IiwiZXhwIjoxNzUxNTg5NjY1fQ.flhL-kgSEwp08ADWIVdsBsGzrk4Hg-UoYuiZ2pXw1kI
+# ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY '0000';
