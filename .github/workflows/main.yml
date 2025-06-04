@@ -23,6 +23,13 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
+      - name: Build and Push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/mbtid:latest
+
       - name: Deploy with SSH
         uses: appleboy/ssh-action@v0.1.6
         with:
@@ -30,7 +37,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            cd /home/ubuntu/mbtid/
+            cd /home/ubuntu/mbtid
 
             sudo docker compose down --rmi local --volumes --remove-orphans
 

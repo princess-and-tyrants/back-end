@@ -1,12 +1,12 @@
 version: "3.8"
+
 services:
   backend:
-    build: .
+    image: iuholic83/mbtid:latest
     ports:
       - "8000:8000"
     environment:
       - DATABASE_URL=mysql+aiomysql://root:0000@db:3306/mbtid
-    depends_on: []
     restart: always
 
   nginx:
