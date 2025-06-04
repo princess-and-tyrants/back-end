@@ -123,7 +123,6 @@ class UserService:
 
     async def signup(self, signup_req: SignupReq):
         try:
-            print(signup_req)
             # NOTE : password 해시는 제거하기, HTTPS를 붙이면 됨
             # NOTE : 이전 코드
             # decrypted_password = aes_decrypt(signup_req.password, key, iv)

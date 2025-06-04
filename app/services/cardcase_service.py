@@ -82,14 +82,12 @@ class CardcaseService:
         cardcase_records = result.scalars().all()
 
         collected_user_ids = [record.collected_user_id for record in cardcase_records]
-        print(collected_user_ids)
         if collected_user_ids:
             new_query2 = select(User).where(User.user_id.in_(collected_user_ids))
             result = await self.db.execute(new_query2)
             user_records = result.scalars().all()
 
             cardcase_data = []
-            print(user_records)
             for ur in user_records :
                 mbti_first_element = 'I' if ur.mbti_ei_score > 50 else 'E'
                 mbti_second_element = 'N' if ur.mbti_sn_score > 50 else 'S'

@@ -11,8 +11,8 @@ key = base64.b64decode("orgH1VGPj3ZfpdPanx/Rx1fDl1QCDDtFNx7ltYYF9f4=")  # 32바�
 iv = base64.b64decode("NGK7TQcuvspBSMImohFPvA==")  # 16바이트 길이의 랜덤 IV
 
 # 생성된 키와 IV를 Base64로 출력하여 확인
-print(f"KEY: {base64.b64encode(key).decode()}")  # Base64로 키를 인코딩하여 출력
-print(f"IV: {base64.b64encode(iv).decode()}")  # Base64로 IV를 인코딩하여 출력
+# print(f"KEY: {base64.b64encode(key).decode()}")  # Base64로 키를 인코딩하여 출력
+# print(f"IV: {base64.b64encode(iv).decode()}")  # Base64로 IV를 인코딩하여 출력
 
 
 router = APIRouter()
@@ -83,8 +83,8 @@ data = "Hello, AES-256 with Base64!"  # 암호화할 문자열 데이터
 
 # 데이터 암호화 수행
 encrypted = aes_encrypt(data, key, iv)  # AES 암호화 및 Base64 인코딩
-print(f"Encrypted (Base64): {encrypted}")  # 암호화된 데이터를 출력
+# print(f"Encrypted (Base64): {encrypted}")  # 암호화된 데이터를 출력
 
 # 데이터 복호화 수행
 decrypted = aes_decrypt(encrypted, key, iv)  # Base64 디코딩 및 AES 복호화
-print(f"Decrypted: {decrypted}")  # 복호화된 원본 데이터를 출력
+# print(f"Decrypted: {decrypted}")  # 복호화된 원본 데이터를 출력

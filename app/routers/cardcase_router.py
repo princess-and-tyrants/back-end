@@ -22,7 +22,6 @@ async def get_cardcase_list(request: Request, db: AsyncSession = Depends(get_db)
 
 @router.post("/cardcase", dependencies=[verify_header()], summary="보관함 추가 api", description="", tags=["Cardcase(보관함)"])
 async def create_cardcase(request: Request, target_user_id: str, db: AsyncSession = Depends(get_db)):
-    print(target_user_id)
     cardcase_service = CardcaseService(db)
 
     # 사용자 정보 확인

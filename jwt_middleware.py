@@ -17,24 +17,24 @@ class JWTMiddleware(BaseHTTPMiddleware):
 
     async def dispatch(self, request: Request, call_next):
         # 디버깅 로그 추가
-        print(f"[JWTMiddleware] Request Path: {request.url.path}")
-        print(f"[JWTMiddleware] Allowed Routes: {self.allowed_routes}")
-        print(f"[JWTMiddleware] Excluded Prefixes: {self.excluded_prefixes}")
+        # print(f"[JWTMiddleware] Request Path: {request.url.path}")
+        # print(f"[JWTMiddleware] Allowed Routes: {self.allowed_routes}")
+        # print(f"[JWTMiddleware] Excluded Prefixes: {self.excluded_prefixes}")
 
         # 요청 경로가 제외할 접두사로 시작하면 검증하지 않음
         for prefix in self.excluded_prefixes:
             if request.url.path.startswith(prefix):
-                print(f"[JWTMiddleware] Path '{request.url.path}' excluded.")
+                # print(f"[JWTMiddleware] Path '{request.url.path}' excluded.")
                 return await call_next(request)
 
         # Authorization 헤더 확인
         if "Authorization" not in request.headers:
-            print("[JWTMiddleware] Authorization header missing.")
+            # print("[JWTMiddleware] Authorization header missing.")
             return JSONResponse(status_code=499, content={"detail": "Authorization header missing."})
 
         auth_header = request.headers["Authorization"]
         if not auth_header.startswith("Bearer "):
-            print("[JWTMiddleware] Invalid Authorization header format.")
+            # print("[JWTMiddleware] Invalid Authorization header format.")
             return JSONResponse(status_code=499, content={"detail": "Invalid Authorization header format."})
 
         # JWT 토큰 검증
@@ -42,12 +42,12 @@ class JWTMiddleware(BaseHTTPMiddleware):
         try:
             decoded_token = jwt.decode(token, secret_key, algorithms=["HS256"])
             request.state.user = decoded_token  # Attach user information to the request state
-            print("[JWTMiddleware] Token decoded successfully.")
+            # print("[JWTMiddleware] Token decoded successfully.")
         except jwt.ExpiredSignatureError:
-            print("[JWTMiddleware] Token has expired.")
+            # print("[JWTMiddleware] Token has expired.")
             return JSONResponse(status_code=499, content={"detail": "Token has expired."})
         except jwt.InvalidTokenError:
-            print("[JWTMiddleware] Invalid token.")
+            # print("[JWTMiddleware] Invalid token.")
             return JSONResponse(status_code=499, content={"detail": "Invalid token."})
 
         # 다음 미들웨어로 이동
@@ -63,14 +63,14 @@ class BlockUndefinedRoutesMiddleware(BaseHTTPMiddleware):
 
     async def dispatch(self, request: Request, call_next):
         # 디버깅 로그 추가
-        print(f"[BlockUndefinedRoutesMiddleware] Request Path: {request.url.path}")
-        print(f"[BlockUndefinedRoutesMiddleware] Allowed Routes: {self.allowed_routes}")
-        print(f"[BlockUndefinedRoutesMiddleware] Excluded Prefixes: {self.excluded_prefixes}")
+        # print(f"[BlockUndefinedRoutesMiddleware] Request Path: {request.url.path}")
+        # print(f"[BlockUndefinedRoutesMiddleware] Allowed Routes: {self.allowed_routes}")
+        # print(f"[BlockUndefinedRoutesMiddleware] Excluded Prefixes: {self.excluded_prefixes}")
 
         # 제외 경로 확인
         for prefix in self.excluded_prefixes:
             if request.url.path.startswith(prefix):
-                print(f"[BlockUndefinedRoutesMiddleware] Path '{request.url.path}' excluded.")
+                # print(f"[BlockUndefinedRoutesMiddleware] Path '{request.url.path}' excluded.")
                 return await call_next(request)
 
         # 허용된 경로 확인
@@ -80,7 +80,7 @@ class BlockUndefinedRoutesMiddleware(BaseHTTPMiddleware):
                 allowed = True
                 break
         if not allowed:
-            print(f"[BlockUndefinedRoutesMiddleware] Path '{request.url.path}' not allowed.")
+            # print(f"[BlockUndefinedRoutesMiddleware] Path '{request.url.path}' not allowed.")
             return JSONResponse(status_code=404, content={"detail": f"Route not found: {request.url.path}"})
         
         # if request.url.path not in self.allowed_routes:
