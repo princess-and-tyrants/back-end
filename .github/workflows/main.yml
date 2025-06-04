@@ -31,5 +31,8 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             cd /home/ubuntu/mbtid/
+
+            sudo docker compose down --rmi local --volumes --remove-orphans
+
             sudo docker compose pull
             sudo docker compose up -d
