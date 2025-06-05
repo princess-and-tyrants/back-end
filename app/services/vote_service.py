@@ -47,7 +47,7 @@ class voteService:
             
             # 성공적인 삽입 후 반환 데이터 구성
             return {
-                "message": "cardcase created successfully",
+                "message": "success",
                 "data": {
                     "vote_id": new_vote.vote_id
                 }
@@ -193,7 +193,7 @@ class voteService:
 
         # 성공적인 삽입 후 반환 데이터 구성
         return {
-            "message": "cardcase created successfully",
+            "message": "success",
             "data": result_list
         }
 

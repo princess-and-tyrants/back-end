@@ -32,7 +32,7 @@ class CardcaseService:
             await self.db.delete(cardcase)
             await self.db.commit()
 
-            return {"message": "성공적으로 보관함에서 삭제하였습니다."}
+            return {"message": "success"}
 
         except Exception as e:
             # 예외 발생 시 롤백
@@ -55,7 +55,7 @@ class CardcaseService:
             
             # 성공적인 삽입 후 반환 데이터 구성
             return {
-                "message": "cardcase created successfully",
+                "message": "success",
                 "data": {
                     "cardcase_id": new_cardcase.cardcase_id,
                     "owner_user_id": new_cardcase.owner_user_id,
@@ -104,6 +104,6 @@ class CardcaseService:
                 temp_dict["mbti_pj_score"] = ur.mbti_pj_score
                 cardcase_data.append(temp_dict)
 
-            return {"message" : "성공", "data" : cardcase_data}
+            return {"message" : "success", "data" : cardcase_data}
         
         return {"message" : "방명록 데이터가 없습니다.", "data" : []}
