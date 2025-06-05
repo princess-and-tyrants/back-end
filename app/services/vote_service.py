@@ -164,7 +164,7 @@ class voteService:
             mbti_result += "E" if user.mbti_ei_score < 50 else "I"
             mbti_result += "S" if user.mbti_sn_score < 50 else "N"
             mbti_result += "T" if user.mbti_tf_score < 50 else "F"
-            mbti_result += "J" if user.mbti_jp_score < 50 else "P"
+            mbti_result += "J" if user.mbti_pj_score < 50 else "P"
             user_mbti_dict[user.user_id] = mbti_result
 
         result_list = []
