@@ -157,7 +157,15 @@ class voteService:
         query = select(User).where(User.user_id.in_(voting_user_ids), User.is_deleted == "N")
         result = await self.db.execute(query)
         users = result.scalars().all()
-        user_dict = {user.user_id: user.nickname for user in users}
+        user_nickname_dict = {user.user_id: user.nickname for user in users}
+        user_mbti_dict = {}
+        for user in users:
+            mbti_result = ""
+            mbti_result += "E" if user.mbti_ei_score < 50 else "I"
+            mbti_result += "S" if user.mbti_sn_score < 50 else "N"
+            mbti_result += "T" if user.mbti_tf_score < 50 else "F"
+            mbti_result += "J" if user.mbti_jp_score < 50 else "P"
+            user_mbti_dict[user.user_id] = mbti_result
 
         result_list = []
         
@@ -171,7 +179,8 @@ class voteService:
             user_vote_dict = {
                 "vote_id": vote.vote_id,
                 "voting_user_id": vote.voting_user_id,
-                "voting_user_nickname": user_dict.get(vote.voting_user_id, "Unknown"),
+                "voting_user_nickname": user_nickname_dict.get(vote.voting_user_id, "Unknown"),
+                "voting_user_mbti": user_mbti_dict.get(vote.voting_user_id, "Unknown"),
                 "mbti_result": mbti_result,
                 "comment": vote.comment,
                 "incognito": vote.incognito
