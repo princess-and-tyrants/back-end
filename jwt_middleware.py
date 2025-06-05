@@ -16,6 +16,9 @@ class JWTMiddleware(BaseHTTPMiddleware):
         self.excluded_prefixes = excluded_prefixes or []  # 제외할 경로 접두사
 
     async def dispatch(self, request: Request, call_next):
+        if request.method == "OPTIONS":
+            return await call_next(request)
+
         # 디버깅 로그 추가
         # print(f"[JWTMiddleware] Request Path: {request.url.path}")
         # print(f"[JWTMiddleware] Allowed Routes: {self.allowed_routes}")
@@ -62,6 +65,9 @@ class BlockUndefinedRoutesMiddleware(BaseHTTPMiddleware):
         self.excluded_prefixes = excluded_prefixes or []  # 제외할 접두사
 
     async def dispatch(self, request: Request, call_next):
+        if request.method == "OPTIONS":
+            return await call_next(request)
+        
         # 디버깅 로그 추가
         # print(f"[BlockUndefinedRoutesMiddleware] Request Path: {request.url.path}")
         # print(f"[BlockUndefinedRoutesMiddleware] Allowed Routes: {self.allowed_routes}")
