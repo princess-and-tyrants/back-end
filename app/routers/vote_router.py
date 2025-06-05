@@ -25,8 +25,8 @@ async def create_vote(vote_req: VoteReq, request: Request, db: AsyncSession = De
     result = await vote_service.create_vote(user.get("user_id"), vote_req.target_user_id, vote_req)
     return result
 
-@router.get("/vote/result", dependencies=[verify_header()], summary="친구들이 생각하는 나의 mbti 결과 api", description="", tags=["vote(투표)"])
-async def get_vote_result(request: Request, db: AsyncSession = Depends(get_db)):
+@router.get("/vote/result/my", dependencies=[verify_header()], summary="친구들이 생각하는 나의 mbti 결과 api", description="", tags=["vote(투표)"])
+async def get_vote_my_result(request: Request, db: AsyncSession = Depends(get_db)):
     vote_service = voteService(db)
 
     user = getattr(request.state, "user", None)
@@ -36,8 +36,8 @@ async def get_vote_result(request: Request, db: AsyncSession = Depends(get_db)):
     result = await vote_service.get_vote_result(user.get("user_id"))
     return result
 
-@router.get("/vote/list", dependencies=[verify_header()], summary="친구들이 생각하는 나의 mbti 방명록 api", description="", tags=["vote(투표)"])
-async def get_vote_list(request: Request, db: AsyncSession = Depends(get_db)):
+@router.get("/vote/list/my", dependencies=[verify_header()], summary="친구들이 생각하는 나의 mbti 방명록 api", description="", tags=["vote(투표)"])
+async def get_vote_my_list(request: Request, db: AsyncSession = Depends(get_db)):
     vote_service = voteService(db)
 
     user = getattr(request.state, "user", None)
@@ -46,6 +46,29 @@ async def get_vote_list(request: Request, db: AsyncSession = Depends(get_db)):
     
     result = await vote_service.get_vote_list(user.get("user_id"))
     return result
+
+@router.get("/vote/result/{user_id}", dependencies=[verify_header()], summary="친구들이 생각하는 나의 mbti 결과 api", description="", tags=["vote(투표)"])
+async def get_vote_result(user_id: str, request: Request, db: AsyncSession = Depends(get_db)):
+    vote_service = voteService(db)
+
+    user = getattr(request.state, "user", None)
+    if not user:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    
+    result = await vote_service.get_vote_result(user_id)
+    return result
+
+@router.get("/vote/list/{user_id}", dependencies=[verify_header()], summary="친구들이 생각하는 나의 mbti 방명록 api", description="", tags=["vote(투표)"])
+async def get_vote_list(user_id: str, request: Request, db: AsyncSession = Depends(get_db)):
+    vote_service = voteService(db)
+
+    user = getattr(request.state, "user", None)
+    if not user:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    
+    result = await vote_service.get_vote_list(user_id)
+    return result
+
 
 # @router.post("/vote/{user_id}/new")
 # async def create_vote_route(user_id: str, vote_req: VoteReq, db: Session = Depends(get_db)):
