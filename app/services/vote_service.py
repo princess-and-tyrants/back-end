@@ -176,10 +176,14 @@ class voteService:
             mbti_result += vote.third_mbti_element
             mbti_result += vote.forth_mbti_element
 
+            voting_user_nickname = "익명"
+            if vote.incognito == "N":
+                voting_user_nickname = user_nickname_dict.get(vote.voting_user_id, "Unknown")
+
             user_vote_dict = {
                 "vote_id": vote.vote_id,
                 "voting_user_id": vote.voting_user_id,
-                "voting_user_nickname": user_nickname_dict.get(vote.voting_user_id, "Unknown"),
+                "voting_user_nickname": voting_user_nickname,
                 "voting_user_mbti": user_mbti_dict.get(vote.voting_user_id, "Unknown"),
                 "mbti_result": mbti_result,
                 "comment": vote.comment,
