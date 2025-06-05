@@ -44,5 +44,5 @@ jobs:
 
             sudo docker image prune -f
 
-            sudo docker compose build backend
-            sudo docker compose up -d backend nginx
+            sudo docker compose pull backend
+            sudo docker compose up -d --force-recreate backend nginx
