@@ -25,6 +25,7 @@ from app.routers.cardcase_router import router as cardcase_router
 app = FastAPI(title="Hackathon Project", version="1.0")
 
 logging.basicConfig(level=logging.DEBUG)
+logging.getLogger("sqlalchemy.engine").setLevel(logging.WARNING)
 
 
 # 라우터 추가
