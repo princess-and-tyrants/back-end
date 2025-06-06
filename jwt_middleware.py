@@ -3,6 +3,9 @@ from fastapi import Request
 from fastapi.responses import JSONResponse
 import jwt
 from fastapi.security import APIKeyHeader
+import logging
+
+log = logging.getLogger(__name__)
 
 api_key_header = APIKeyHeader(name="Authorization", auto_error=False)
 
@@ -33,12 +36,12 @@ class JWTMiddleware(BaseHTTPMiddleware):
         # Authorization 헤더 확인
         if "Authorization" not in request.headers:
             # print("[JWTMiddleware] Authorization header missing.")
-            return JSONResponse(status_code=499, content={"detail": "Authorization header missing."})
+            return JSONResponse(status_code=499, content={"message": "헤더에 토큰이 없습니다."})
 
         auth_header = request.headers["Authorization"]
         if not auth_header.startswith("Bearer "):
             # print("[JWTMiddleware] Invalid Authorization header format.")
-            return JSONResponse(status_code=499, content={"detail": "Invalid Authorization header format."})
+            return JSONResponse(status_code=499, content={"message": "헤더에 토큰 형식이 잘못되었습니다."})
 
         # JWT 토큰 검증
         token = auth_header.split(" ")[1]
@@ -48,10 +51,10 @@ class JWTMiddleware(BaseHTTPMiddleware):
             # print("[JWTMiddleware] Token decoded successfully.")
         except jwt.ExpiredSignatureError:
             # print("[JWTMiddleware] Token has expired.")
-            return JSONResponse(status_code=499, content={"detail": "Token has expired."})
+            return JSONResponse(status_code=499, content={"message": "토큰이 만료되었습니다."})
         except jwt.InvalidTokenError:
             # print("[JWTMiddleware] Invalid token.")
-            return JSONResponse(status_code=499, content={"detail": "Invalid token."})
+            return JSONResponse(status_code=499, content={"message": "잘못된 토큰입니다."})
 
         # 다음 미들웨어로 이동
         response = await call_next(request)
@@ -87,7 +90,8 @@ class BlockUndefinedRoutesMiddleware(BaseHTTPMiddleware):
                 break
         if not allowed:
             # print(f"[BlockUndefinedRoutesMiddleware] Path '{request.url.path}' not allowed.")
-            return JSONResponse(status_code=404, content={"detail": f"Route not found: {request.url.path}"})
+            log.error(f"★★★★★허용되지 않은 경로★★★★★ : {request.url.path}")
+            return JSONResponse(status_code=404, content={"message": f"허용되지 않은 url: {request.url.path}"})
         
         # if request.url.path not in self.allowed_routes:
         #     print(f"[BlockUndefinedRoutesMiddleware] Path '{request.url.path}' not allowed.")

@@ -10,6 +10,11 @@ services:
     depends_on:
       - db
     restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "500m"
+        max-file: "10"
 
   db:
     image: mysql:8.0
@@ -20,6 +25,11 @@ services:
     volumes:
       - db_data:/var/lib/mysql
       - ./dump-mbtid-202506050124.sql:/docker-entrypoint-initdb.d/dump.sql:ro
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
 
   nginx:
     image: nginx:latest
@@ -30,6 +40,11 @@ services:
     depends_on:
       - backend
     restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 volumes:
   db_data:
