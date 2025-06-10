@@ -2,6 +2,7 @@ import uuid
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import HTTPException
 from app.schemas.user import User
+from app.schemas.cardcase import CardCase
 from sqlalchemy.future import select
 from sqlalchemy.sql import exists
 from sqlalchemy import and_, update
@@ -174,3 +175,19 @@ class UserService:
 
         await self.db.close()  # 세션 닫기
         return {"accessToken" : generate_jwt_token(user.user_id)}
+    
+    async def is_friend(self, this_user_id : str, target_user_id : str):
+        # decrypted_password = aes_decrypt(signin_req.password, key, iv)
+        query = select(CardCase).where(
+            and_(
+                CardCase.owner_user_id == this_user_id,
+                CardCase.collected_user_id == target_user_id,
+                CardCase.is_deleted == "N"
+            )
+        )
+        result = await self.db.execute(query)
+        card_case = result.scalar_one_or_none()
+        if not card_case:
+            return {"isFriend": False, "message" : "친구가 아닙니다."}
+        
+        return {"isFriend": True, "message" : "친구입니다."}

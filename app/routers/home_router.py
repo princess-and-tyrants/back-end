@@ -27,3 +27,12 @@ async def get_home_my_profile(request: Request, db: AsyncSession = Depends(get_d
         raise HTTPException(status_code=401, detail="Unauthorized")
     result = await user_service.get_home_profile(user.get("user_id"))
     return result
+
+@router.get("/home/profile/friends", dependencies=[verify_header()], summary="유저가 친구인지 조회하는 api", description="", tags=["Home"])
+async def get_is_friends(request: Request, user_id: str, db: AsyncSession = Depends(get_db)):
+    user_service = UserService(db)
+    user = getattr(request.state, "user", None)
+    if not user:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    result = await user_service.is_friend(user_id, user.get("user_id"))
+    return result
