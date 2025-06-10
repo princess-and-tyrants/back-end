@@ -34,5 +34,5 @@ async def get_is_friends(request: Request, user_id: str, db: AsyncSession = Depe
     user = getattr(request.state, "user", None)
     if not user:
         raise HTTPException(status_code=401, detail="Unauthorized")
-    result = await user_service.is_friend(user_id, user.get("user_id"))
+    result = await user_service.is_friend(user.get("user_id"), user_id)
     return result
