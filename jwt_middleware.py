@@ -23,6 +23,9 @@ class JWTMiddleware(BaseHTTPMiddleware):
             for prefix in self.excluded_prefixes:
                 if request.url.path.startswith(prefix):
                     return await call_next(request)
+            for prefix in self.excluded_prefixes:
+                if request.url.path.startswith(prefix):
+                    return await call_next(request)
 
         # 디버깅 로그 추가
         # print(f"[JWTMiddleware] Request Path: {request.url.path}")
@@ -71,6 +74,9 @@ class BlockUndefinedRoutesMiddleware(BaseHTTPMiddleware):
 
     async def dispatch(self, request: Request, call_next):
         if request.method == "OPTIONS":
+            for prefix in self.excluded_prefixes:
+                if request.url.path.startswith(prefix):
+                    return await call_next(request)
             for prefix in self.excluded_prefixes:
                 if request.url.path.startswith(prefix):
                     return await call_next(request)
