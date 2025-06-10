@@ -23,9 +23,13 @@ class JWTMiddleware(BaseHTTPMiddleware):
             for prefix in self.excluded_prefixes:
                 if request.url.path.startswith(prefix):
                     return await call_next(request)
-            for prefix in self.excluded_prefixes:
-                if request.url.path.startswith(prefix):
-                    return await call_next(request)
+            allowed = False
+            for route in self.allowed_routes:
+                if request.url.path == route or request.url.path.startswith(route + "/"):
+                    allowed = True
+                    break
+            if allowed:
+                return await call_next(request)
 
         # 디버깅 로그 추가
         # print(f"[JWTMiddleware] Request Path: {request.url.path}")
@@ -77,9 +81,13 @@ class BlockUndefinedRoutesMiddleware(BaseHTTPMiddleware):
             for prefix in self.excluded_prefixes:
                 if request.url.path.startswith(prefix):
                     return await call_next(request)
-            for prefix in self.excluded_prefixes:
-                if request.url.path.startswith(prefix):
-                    return await call_next(request)
+            allowed = False
+            for route in self.allowed_routes:
+                if request.url.path == route or request.url.path.startswith(route + "/"):
+                    allowed = True
+                    break
+            if allowed:
+                return await call_next(request)
             
         # 디버깅 로그 추가
         # print(f"[BlockUndefinedRoutesMiddleware] Request Path: {request.url.path}")
