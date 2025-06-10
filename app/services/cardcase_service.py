@@ -41,6 +41,19 @@ class CardcaseService:
 
     async def create_cardcase(self, this_owner_user_id: str, this_collected_user_id: str):
         try:
+            # 이미 존재하는지 확인
+            query = select(CardCase).where(
+                and_(
+                    CardCase.owner_user_id == this_owner_user_id,
+                    CardCase.collected_user_id == this_collected_user_id,
+                    CardCase.is_deleted == "N"
+                )
+            )
+            result = await self.db.execute(query)
+            existing_cardcase = result.scalar_one_or_none()
+            if existing_cardcase:
+                raise HTTPException(status_code=400, detail="이미 존재하는 보관함입니다.")
+
             # 새 CardCase 객체 생성
             new_cardcase = CardCase(
                 cardcase_id=str(uuid.uuid4()),  # UUID 생성
