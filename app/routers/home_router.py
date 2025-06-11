@@ -10,7 +10,7 @@ def verify_header(access_token=Security(APIKeyHeader(name='Authorization'))):
 
 router = APIRouter()
 
-@router.get("/home/profile", dependencies=[verify_header()], summary="유저 기본 정보 조회 api", description="", tags=["Home"])
+@router.get("/home/profile", summary="유저 기본 정보 조회 api", description="", tags=["Home"])
 async def get_home_profile(user_id: str, db: AsyncSession = Depends(get_db)):
     user_service = UserService(db)
     
