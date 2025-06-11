@@ -33,8 +33,15 @@ async def create_cardcase(request: Request, target_user_id: str, db: AsyncSessio
     result = await cardcase_service.create_cardcase(user.get("user_id"), target_user_id)
     return result
 
-@router.delete("/cardcase/{cardcase_id}", dependencies=[verify_header()], summary="보관함 삭제 API", description="물리적으로 카드케이스 데이터를 삭제", tags=["Cardcase(보관함)"])
-async def delete_cardcase(cardcase_id: str, db: AsyncSession = Depends(get_db)):
+@router.delete("/cardcase/{user_id}", dependencies=[verify_header()], summary="보관함 삭제 API", description="물리적으로 카드케이스 데이터를 삭제", tags=["Cardcase(보관함)"])
+async def delete_cardcase(request: Request, user_id: str, db: AsyncSession = Depends(get_db)):
     cardcase_service = CardcaseService(db)
-    result = await cardcase_service.delete_cardcase(cardcase_id)
+
+    # 사용자 정보 확인
+    user = getattr(request.state, "user", None)
+    if not user or not user.get("user_id"):
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    
+    # 카드케이스 삭제
+    result = await cardcase_service.delete_cardcase(user.get("user_id"), user_id)
     return result
