@@ -43,7 +43,7 @@ class UserService:
                 # 업데이트 실행
                 await self.db.execute(update_query)
 
-                return {"message" : "update is successful"}
+                return {"message" : "닉네임이 성공적으로 업데이트되었습니다."}
 
             except HTTPException:
                 # 특정 예외는 바로 전달
@@ -51,7 +51,7 @@ class UserService:
             except SQLAlchemyError as e:
                 # SQLAlchemy 관련 에러 발생 시 롤백
                 await transaction.rollback()
-                raise HTTPException(status_code=404, detail="Database error occurred") from e
+                raise HTTPException(status_code=400, detail="데이터베이스 에러") from e
     
         
     async def update_mbti(self, user_id : str, update_user_mbti: UpdateUserMbtiReq) :
@@ -81,7 +81,7 @@ class UserService:
                 # 업데이트 실행
                 await self.db.execute(update_query)
 
-                return {"message" : "update is successful"}
+                return {"message" : "mbti가 성공적으로 업데이트되었습니다."}
 
             except HTTPException:
                 # 특정 예외는 바로 전달
@@ -89,7 +89,7 @@ class UserService:
             except SQLAlchemyError as e:
                 # SQLAlchemy 관련 에러 발생 시 롤백
                 await transaction.rollback()
-                raise HTTPException(status_code=404, detail="Database error occurred") from e
+                raise HTTPException(status_code=400, detail="데이터베이스 에러") from e
 
 
     async def get_home_profile(self, user_id : str):

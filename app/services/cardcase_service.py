@@ -18,15 +18,16 @@ class CardcaseService:
     def __init__(self, db: AsyncSession):
         self.db = db
 
-    async def delete_cardcase(self, cardcase_id: str):
+    async def delete_cardcase(self, this_user_id: str, target_user_id: str):
         try:
             # 삭제할 CardCase 레코드 조회
-            result = await self.db.execute(select(CardCase).where(CardCase.cardcase_id == cardcase_id))
+            result = await self.db.execute(select(CardCase).where(CardCase.owner_user_id == this_user_id,
+                                                                  CardCase.collected_user_id == target_user_id))
             cardcase = result.scalar_one_or_none()
 
             # 존재하지 않는 경우
             if not cardcase:
-                raise HTTPException(status_code=404, detail="CardCase not found")
+                raise HTTPException(status_code=400, detail="해당하는 보관함이 존재하지 않습니다.")
 
             # 레코드 삭제
             await self.db.delete(cardcase)
