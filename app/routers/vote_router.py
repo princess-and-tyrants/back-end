@@ -48,14 +48,14 @@ async def get_vote_my_list(request: Request, db: AsyncSession = Depends(get_db))
     return result
 
 @router.get("/home/vote/result/{user_id}", dependencies=[verify_header()], summary="친구들이 생각하는 나의 mbti 결과 api", description="", tags=["vote(투표)"])
-async def get_vote_result(user_id: str, request: Request, db: AsyncSession = Depends(get_db)):
+async def get_vote_result(user_id: str, db: AsyncSession = Depends(get_db)):
     vote_service = voteService(db)
     
     result = await vote_service.get_vote_result(user_id)
     return result
 
 @router.get("/home/vote/list/{user_id}", dependencies=[verify_header()], summary="친구들이 생각하는 나의 mbti 방명록 api", description="", tags=["vote(투표)"])
-async def get_vote_list(user_id: str, request: Request, db: AsyncSession = Depends(get_db)):
+async def get_vote_list(user_id: str,  db: AsyncSession = Depends(get_db)):
     vote_service = voteService(db)
     
     result = await vote_service.get_vote_list(user_id)
