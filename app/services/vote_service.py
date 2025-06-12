@@ -65,6 +65,9 @@ class voteService:
                 }
             }
         
+        except HTTPException as http_exc:
+            await self.db.rollback()
+            raise http_exc
         except Exception as e:
             await self.db.rollback()
             raise HTTPException(status_code=400, detail="투표 결과 데이터 생성중에 오류가 발생했습니다. 다시 시도해주세요.")
