@@ -48,10 +48,8 @@ app.add_middleware(
 
 
 # 허용된 경로 및 접두사 설정
-allowed_routes = ["/user", "/cardcase", "/vote", "/my", "/home"]
-excluded_prefixes = ["/signup", "/signin", "/check/id", "/home",
-                     "/public", "/static", "/docs", "/redoc", "/openapi.json", "/make_test_password",
-                      "/generate_secret_key", "/generate_key", "/generate_key_base64"]
+allowed_routes = ["허용 경로"]
+excluded_prefixes = ["허용 경로"]
 
 
 # 미들웨어 추가
@@ -73,18 +71,5 @@ async def log_requests(request: Request, call_next):
     return response
 
 
-
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=80, reload=True)
-
-
-# pip install -r requirements.txt
-
-# uvicorn main:app --reload
-# uvicorn main:app --host 0.0.0.0 --port 443 --ssl-keyfile=key.pem --ssl-certfile=cert.pem
-
-#pip install --upgrade fastapi
-#uvicorn main:app --host 0.0.0.0 --port 8000 --reload
-#uvicorn main:app --host 0.0.0.0 --port 80 --reload
-
-# ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY '0000';
