@@ -7,7 +7,7 @@ from app.models.vote_dto import VoteReq
 from app.schemas.user import User
 from app.schemas.vote import Vote
 from app.schemas.vote_link import VoteLink
-from sqlalchemy import func
+from sqlalchemy import func, and_
 
 class voteService:
     def __init__(self, db: AsyncSession):
@@ -30,13 +30,16 @@ class voteService:
                 await self.db.refresh(new_vote_link)
             
             query = select(Vote).where(
-                Vote.voting_user_id == voting_user_id,
-                Vote.link_id == new_vote_link.link_id
+                and_(
+                    Vote.voting_user_id == voting_user_id,
+                    Vote.link_id == new_vote_link.link_id
+                )
             )
             result = await self.db.execute(query)
-            existing_cardcase = result.scalar_one_or_none()
-            if existing_cardcase:
+            existing_vote = result.scalars().first()  # 또는 .one_or_none()
+            if existing_vote:
                 raise HTTPException(status_code=400, detail="이미 존재하는 투표입니다.")
+                        
 
             new_vote = Vote(
                 vote_id=str(uuid.uuid4()),  # UUID 생성
