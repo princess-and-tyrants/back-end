@@ -91,7 +91,9 @@ class CardcaseService:
         if not user:
             raise HTTPException(status_code=450, detail="유저 정보를 찾을 수 없습니다.") # 450 : 해당 데이터
         
-        new_query1 = select(CardCase).where(and_(CardCase.owner_user_id == user_id, CardCase.is_deleted == "N"))
+        new_query1 = select(CardCase).where(
+            and_(CardCase.owner_user_id == user_id, CardCase.is_deleted == "N")
+        ).order_by(CardCase.created_date.desc())
         result = await self.db.execute(new_query1)
         cardcase_records = result.scalars().all()
 

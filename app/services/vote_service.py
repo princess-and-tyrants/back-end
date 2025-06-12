@@ -38,7 +38,7 @@ class voteService:
             result = await self.db.execute(query)
             existing_vote = result.scalars().first()  # 또는 .one_or_none()
             if existing_vote:
-                raise HTTPException(status_code=400, detail="이미 존재하는 투표입니다.")
+                raise HTTPException(status_code=470, detail="이미 존재하는 투표입니다.")
                         
 
             new_vote = Vote(
@@ -166,7 +166,7 @@ class voteService:
         # voting_user_id를 기준으로 유저 정보 조회 및 딕셔너리 생성
         voting_user_ids = list(set([vote.voting_user_id for vote in user_vote]))
 
-        query = select(User).where(User.user_id.in_(voting_user_ids), User.is_deleted == "N")
+        query = select(User).where(User.user_id.in_(voting_user_ids), User.is_deleted == "N").order_by(Vote.created_date.desc())
         result = await self.db.execute(query)
         users = result.scalars().all()
         user_nickname_dict = {user.user_id: user.nickname for user in users}
