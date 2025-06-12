@@ -28,6 +28,15 @@ class voteService:
                 self.db.add(new_vote_link)
                 await self.db.commit()
                 await self.db.refresh(new_vote_link)
+            
+            query = select(Vote).where(
+                Vote.voting_user_id == voting_user_id,
+                Vote.link_id == new_vote_link.link_id
+            )
+            result = await self.db.execute(query)
+            existing_cardcase = result.scalar_one_or_none()
+            if existing_cardcase:
+                raise HTTPException(status_code=400, detail="이미 존재하는 투표입니다.")
 
             new_vote = Vote(
                 vote_id=str(uuid.uuid4()),  # UUID 생성
