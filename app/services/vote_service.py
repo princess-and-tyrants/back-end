@@ -159,14 +159,17 @@ class voteService:
             await self.db.commit()
             await self.db.refresh(user_vote_link)
 
-        query = select(Vote).where(Vote.link_id == user_vote_link.link_id, Vote.is_deleted == "N")
+        query = select(Vote).where(
+            Vote.link_id == user_vote_link.link_id,
+            Vote.is_deleted == "N"
+        ).order_by(Vote.created_date.desc())
         result = await self.db.execute(query)
         user_vote = result.scalars().all()
 
         # voting_user_id를 기준으로 유저 정보 조회 및 딕셔너리 생성
         voting_user_ids = list(set([vote.voting_user_id for vote in user_vote]))
 
-        query = select(User).where(User.user_id.in_(voting_user_ids), User.is_deleted == "N").order_by(Vote.created_date.desc())
+        query = select(User).where(User.user_id.in_(voting_user_ids), User.is_deleted == "N")
         result = await self.db.execute(query)
         users = result.scalars().all()
         user_nickname_dict = {user.user_id: user.nickname for user in users}
