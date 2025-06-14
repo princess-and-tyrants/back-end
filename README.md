@@ -2,14 +2,14 @@
 
 MBTiD는 친구들과 함께 MBTI 명함을 만들어 공유하고, 서로의 MBTI를 맞춰보며 즐길 수 있는 웹앱입니다.
 
-<table>
+<table width="100%">
   <tr>
-    <td><img src="images/1.jpg" alt="screenshot 1" width="200"/></td>
-    <td><img src="images/2.jpg" alt="screenshot 2" width="200"/></td>
+    <td><img src="images/1.jpg" alt="screenshot 1" width="100%"/></td>
+    <td><img src="images/2.jpg" alt="screenshot 2" width="100%"/></td>
   </tr>
   <tr>
-    <td><img src="images/3.jpg" alt="screenshot 3" width="200"/></td>
-    <td><img src="images/4.jpg" alt="screenshot 4" width="200"/></td>
+    <td><img src="images/3.jpg" alt="screenshot 3" width="100%"/></td>
+    <td><img src="images/4.jpg" alt="screenshot 4" width="100%"/></td>
   </tr>
 </table>
 
