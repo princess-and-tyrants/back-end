@@ -2,6 +2,15 @@
 
 MBTiD는 친구들과 함께 MBTI 명함을 만들어 공유하고, 서로의 MBTI를 맞춰보며 즐길 수 있는 웹앱입니다.
 
+<table>
+    <tr>
+        <td><img src="images/1.png" alt="screenshot 1" width="200"/></td>
+        <td><img src="images/2.png" alt="screenshot 2" width="200"/></td>
+        <td><img src="images/3.png" alt="screenshot 3" width="200"/></td>
+        <td><img src="images/4.png" alt="screenshot 4" width="200"/></td>
+    </tr>
+</table>
+
 ## 프로젝트 소개
 - **프로젝트명:** MBTiD
 - **목적:** 20대 청년들과 사회초년생들이 처음 만날 때, 자연스럽게 대화의 물꼬를 트는 MBTI 토크를 더 재밌고 귀엽게 즐길 수 있도록 돕는 명함 생성/공유 서비스입니다.
