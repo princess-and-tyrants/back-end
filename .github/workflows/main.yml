@@ -40,9 +40,6 @@ jobs:
           script: |
             cd /home/winterholic/projects/services/mbtid
 
-            docker compose stop backend nginx
-            docker compose rm -f backend nginx
-
             docker image prune -f
 
             docker compose pull backend
