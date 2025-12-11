@@ -43,3 +43,4 @@ jobs:
             docker image prune -f
 
             docker compose pull backend
+            docker compose up -d backend
