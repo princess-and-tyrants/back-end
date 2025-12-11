@@ -2,9 +2,15 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-DATABASE_URL = "mysql+aiomysql://root:0000@db:3306/mbtid"
+# DATABASE_URL = "mysql+aiomysql://root:0000@db:3306/mbtid"
 # DATABASE_URL = "mysql+aiomysql://root:0000@127.0.0.1:3306/mbtid"
 # DATABASE_URL = "mysql+aiomysql://root:0000@:3306/mbtid"
+
+# 환경 변수에서 읽기
+DATABASE_URL = os.getenv(
+    "DATABASE_URL",
+    "mysql+aiomysql://homeserver:password@192.168.0.3:3306/mbtid"  # 기본값
+)
 
 Base = declarative_base()
 
