@@ -11,4 +11,4 @@ starlette
 aiomysql
 pycryptodome
 bcrypt
-
+cryptography
