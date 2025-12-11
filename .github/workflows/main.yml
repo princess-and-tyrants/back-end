@@ -40,10 +40,10 @@ jobs:
           script: |
             cd /home/winterholic/projects/services/mbtid
 
-            sudo docker compose stop backend nginx
-            sudo docker compose rm -f backend nginx
+            docker compose stop backend nginx
+            docker compose rm -f backend nginx
 
-            sudo docker image prune -f
+            docker image prune -f
 
-            sudo docker compose pull backend
-            sudo docker compose up -d --force-recreate backend nginx
+            docker compose pull backend
+            docker compose up -d --force-recreate backend nginx
