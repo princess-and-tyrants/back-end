@@ -40,7 +40,7 @@ app.include_router(cardcase_router)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://mbtid.winterholic.net", "http://localhost:5173", "https://mbtid.vercel.app/login"],  # 프론트 origin 허용
+    allow_origins=["https://mbtid.winterholic.net", "http://localhost:5173", "https://mbtid.vercel.app"],  # 프론트 origin 허용
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allow_headers=["*"],
